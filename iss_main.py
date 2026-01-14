@@ -5,7 +5,6 @@ import os
 import subprocess
 import sys
 
-
 def install_insilicoseq():
     subprocess.run(
         [sys.executable, "-m", "pip", "install", "--quiet", "insilicoseq"],
