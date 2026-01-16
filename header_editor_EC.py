@@ -34,8 +34,8 @@ def main():
             if lt and lt not in ec_by_lt:
                 ec_by_lt[lt] = ec
 
-    # 2) Write sequences with EC number (-1 if otherwise)
-    with_ec = 0
+    # 2) Write only sequences with EC
+    kept = 0
     total = 0
     with open(args.out, "w") as out:
         for r in SeqIO.parse(args.cds, "fasta"):
@@ -44,18 +44,19 @@ def main():
             pid = info.get("protein_id", "")
             lt = info.get("locus_tag", "")
 
-            ec = ec_by_pid.get(pid) or ec_by_lt.get(lt) or "-1"
-            if ec != "-1":
-                with_ec += 1  # if EC
+            ec = ec_by_pid.get(pid) or ec_by_lt.get(lt)
+            if not ec:
+                continue  # skip no-EC
 
             base = pid or r.id
             r.id = f"{base}|EC={ec}"  # EC stays in first token
             r.name = r.id
             r.description = ""
             SeqIO.write(r, out, "fasta")
+            kept += 1
 
     print(f"Total CDS: {total}")
-    print(f"With EC: {with_ec}")
+    print(f"Kept with EC: {kept}")
     print(f"Wrote: {args.out}")
 
 if __name__ == "__main__":

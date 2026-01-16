@@ -11,7 +11,6 @@ def install_insilicoseq():
         check=True,
     )
 
-
 def main():
     parser = argparse.ArgumentParser()
     parser.add_argument("-i", "--input", required=True, help="Input FASTA")
