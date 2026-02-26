@@ -43,8 +43,8 @@ def main():
     mat = pd.DataFrame.from_dict(counts, orient="index").fillna(0).astype(int)
     mat.index.name = "EC"
 
-    # Write to Excel
-    mat.to_excel(args.output)
+    # Write to tsv
+    mat.to_csv(args.output, sep="\t")
 
 if __name__ == "__main__":
     main()
