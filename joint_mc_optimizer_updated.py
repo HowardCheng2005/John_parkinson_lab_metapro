@@ -210,7 +210,10 @@ def metapathway_gain(tax_id, ec, seen_ecs, metapathway_ecs):
         return 0.0, 0.0
 
     total_ecs = (len(metapathway_ecs))
-    gain = 1.0 / total_ecs
+    if ec not in seen_ecs[tax_id]:
+        gain = 1.0
+    else:
+        gain = 0.0
     repr_bonus = (len(covered) / total_ecs) * gain
     return gain, repr_bonus
 
