@@ -50,7 +50,7 @@ def main():
     nucleotide_with_ec = 0
     nucleotide_total = 0
     with open(args.nucleotide_out, "w") as out:
-        for r in SeqIO.parse(args.cds, "fasta"):
+        for i, r in enumerate(SeqIO.parse(args.cds, "fasta")):
             nucleotide_total += 1
             info = fields(r.description)
             pid = info.get("protein_id", "")
@@ -61,7 +61,7 @@ def main():
                 nucleotide_with_ec += 1  # if EC
 
             base = pid or r.id
-            r.id = f"{base}|EC={ec}"  # EC stays in first token
+            r.id = f"{i:09d}|{base}|EC={ec}"  # EC stays in first token
             r.name = r.id
             r.description = ""
             SeqIO.write(r, out, "fasta")
@@ -70,7 +70,7 @@ def main():
     translation_total = 0
 
     with open(args.translation_out, "w") as out:
-        for r in SeqIO.parse(args.cds, "fasta"):
+        for j, r in enumerate(SeqIO.parse(args.cds, "fasta")):
             translation_total += 1
             info = fields(r.description)
             pid = info.get("protein_id", "")
@@ -80,10 +80,12 @@ def main():
             if ec != "-1":
                 translation_with_ec += 1
             translation = translation_by_pid.get(pid) or translation_by_lt.get(lt)
+            if not translation:
+                continue
 
             base = pid or r.id
             r.seq = Seq(translation)
-            r.id = f"{base}|EC={ec}"
+            r.id = f"{j:09d}|{base}|EC={ec}"
             r.name = r.id
             r.description = ""
             SeqIO.write(r, out, "fasta")
