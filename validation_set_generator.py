@@ -26,23 +26,25 @@ def main():
             if f.type != "CDS":
                 continue
             q = f.qualifiers
+            translation = (q.get("translation") or [""])[0]
+            pid = (q.get("protein_id") or [""])[0]
+            lt = (q.get("locus_tag") or [""])[0]
+
+            if translation:
+                if pid and pid not in translation_by_pid:
+                    translation_by_pid[pid] = translation
+                if lt and lt not in translation_by_lt:
+                    translation_by_lt[lt] = translation
+
             ecs = q.get("EC_number")
             if not ecs:
                 continue
             ec = ";".join(ecs)
-            translation = (q.get("translation") or [""])[0]
-            if not translation:
-                continue
-            pid = (q.get("protein_id") or [""])[0]
-            lt = (q.get("locus_tag") or [""])[0]
+
             if pid and pid not in ec_by_pid:
                 ec_by_pid[pid] = ec
             if lt and lt not in ec_by_lt:
                 ec_by_lt[lt] = ec
-            if pid and pid not in translation_by_pid:
-                translation_by_pid[pid] = translation
-            if lt and lt not in translation_by_lt:
-                translation_by_lt[lt] = translation
 
     # 2) Write sequences with EC number (-1 if otherwise)
     nucleotide_with_ec = 0
