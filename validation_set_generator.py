@@ -79,7 +79,7 @@ def main():
             ec = ec_by_pid.get(pid) or ec_by_lt.get(lt) or "-1"
             if ec != "-1":
                 translation_with_ec += 1
-            translation = translation_by_pid.get(pid) or translation_by_lt.get(lt) or "-1"
+            translation = translation_by_pid.get(pid) or translation_by_lt.get(lt)
 
             base = pid or r.id
             r.seq = Seq(translation)
